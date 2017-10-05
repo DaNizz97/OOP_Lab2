@@ -108,7 +108,22 @@ void StatisticMultiset<T>::AddNum(const std::vector<T> &numbers) {
     }
 }
 
-void StatisticMultiset<T>::AddNum(const std::vector<T> &numbers) {
+template <class T>
+void StatisticMultiset<T>::AddNum(const std::multiset<T> &numbers) {
+    for (int number : numbers) {
+        dataSet.push_back(number);
+        if(number > max){
+            max = number;
+        }
+        if(number < min){
+            min = number;
+        }
+        average+= number;
+    }
+}
+
+template <class T>
+void StatisticMultiset<T>::AddNum(const std::list<T> &numbers) {
     for (int number : numbers) {
         dataSet.push_back(number);
         if(number > max){
