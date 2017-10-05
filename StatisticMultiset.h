@@ -16,17 +16,24 @@ template <class T>
 class StatisticMultiset {
 private:
     T max, min;
-    mutable float average;
+    mutable float average, forAbove, forUnder;
+    mutable int countAbove, countUnder;
     std::vector<int> dataSet;
 public:
     StatisticMultiset(){
         max = std::numeric_limits<T>::min();
         min = std::numeric_limits<T>::max();
         average = 0;
+        forAbove = 0;
+        forUnder = 0;
+        countAbove = 0;
+        countUnder = 0;
     };
     // Добавляет число в набор.
     void AddNum( T num );
     void AddNum( const std::vector<T>& numbers );
+    void AddNum( const std::multiset<T>& numbers );
+    void AddNum( const std::list<T>& numbers );
     void AddNumsFromFile( const char* filename );
     void AddNums( const StatisticMultiset& a_stat_set );
     // Максимальное число в наборе.
@@ -73,25 +80,35 @@ template <class T>
 T StatisticMultiset<T>::getMax() const{
     return max;
 }
+
 template <class T>
 int StatisticMultiset<T>::getCountUnder(float threshold) const{
     int count = 0;
-    for (int i : dataSet) {
-        if(i < threshold){
-            count++;
+    if(forUnder != threshold) {
+        for (int i : dataSet) {
+            if (i < threshold) {
+                count++;
+            }
         }
+        forUnder = threshold;
+        countUnder = count;
     }
-    return count;
+    return countUnder;
 }
+
 template <class T>
 int StatisticMultiset<T>::getCountAbove(float threshold) const{
     int count = 0;
-    for (int i : dataSet) {
-        if(i > threshold){
-            count++;
+    if(forAbove != threshold) {
+        for (int i : dataSet) {
+            if (i > threshold) {
+                count++;
+            }
         }
+        forAbove = threshold;
+        countAbove = count;
     }
-    return count;
+    return countAbove;
 }
 
 template <class T>
@@ -121,7 +138,6 @@ void StatisticMultiset<T>::AddNum(const std::multiset<T> &numbers) {
         average+= number;
     }
 }
-
 
 template <class T>
 void StatisticMultiset<T>::AddNum(const std::list<T> &numbers) {
