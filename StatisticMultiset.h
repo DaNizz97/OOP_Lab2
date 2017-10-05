@@ -122,6 +122,7 @@ void StatisticMultiset<T>::AddNum(const std::multiset<T> &numbers) {
     }
 }
 
+
 template <class T>
 void StatisticMultiset<T>::AddNum(const std::list<T> &numbers) {
     for (int number : numbers) {
